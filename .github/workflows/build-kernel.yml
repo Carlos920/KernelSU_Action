@@ -172,23 +172,18 @@ jobs:
           echo "LOCALVERSION=" >> $GITHUB_ENV
         fi
 
-    - name: Setup SOURCE_BOOT_IMAGE to LineageOS
-      if: env.SOURCE_BOOT_FROM_LINEAGEOS == 'true'
-      run: |
-        cd $GITHUB_WORKSPACE/kernel_workspace
-        lineageos_api_response=$(curl -s https://download.lineageos.org/api/v2/devices/${{ env.DEVICE }}/builds)
-        echo "LineageOS API response: $lineageos_api_response"
-        lineageos_boot_url=$(echo $lineageos_api_response | jq '.[0].files[1].url')
-        echo "lineageos boot url: $lineageos_boot_url"
-        echo "old SOURCE_BOOT_IMAGE=${{ env.SOURCE_BOOT_IMAGE}}"
-        echo "SOURCE_BOOT_IMAGE=$lineageos_boot_url" >> $GITHUB_ENV
-        echo "new SOURCE_BOOT_IMAGE=${{ env.SOURCE_BOOT_IMAGE}}"
-
     - name: Download source boot image
       if: env.BUILD_BOOT_IMG == 'true'
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace
-        wget -O boot-source.img ${{ env.SOURCE_BOOT_IMAGE }}
+        
+        image_url=${{ env.SOURCE_BOOT_IMAGE }}
+        if [[ ${{ env.SOURCE_BOOT_FROM_LINEAGEOS }} == 'true' ]]; then
+            lineageos_api_response=$(curl -s https://download.lineageos.org/api/v2/devices/${{ env.DEVICE }}/builds)
+            image_url=$(echo $lineageos_api_response | jq '.[0].files[1].url')
+        fi
+        
+        wget -O boot-source.img $image_url
         if [ -f boot-source.img ]; then
             echo "FORMAT_MKBOOTING=$(echo `tools/unpack_bootimg.py --boot_img=boot-source.img --format mkbootimg`)" >> $GITHUB_ENV
             echo "HAVE_SOURCE_BOOT_IMAGE=true" >> $GITHUB_ENV
