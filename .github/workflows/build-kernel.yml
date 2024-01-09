@@ -192,7 +192,7 @@ jobs:
       if: env.ENABLE_LXC == 'true'
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
-        for config in $(cat $$GITHUB_WORKSPACE/lxc_patch/${{ env.KERNEL_CONFIG }})
+        for config in $(cat $$GITHUB_WORKSPACE/lxc_patch/${{ env.DEVICE }})
         do
           echo $config >> arch/${{ env.ARCH }}/configs/${{ env.KERNEL_CONFIG }}
         done
