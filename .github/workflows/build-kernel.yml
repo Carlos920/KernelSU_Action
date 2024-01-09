@@ -176,11 +176,13 @@ jobs:
       if: env.BUILD_BOOT_IMG == 'true'
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace
-        
+
         image_url=${{ env.SOURCE_BOOT_IMAGE }}
         if [[ ${{ env.SOURCE_BOOT_FROM_LINEAGEOS }} == 'true' ]]; then
             lineageos_api_response=$(curl -s https://download.lineageos.org/api/v2/devices/${{ env.DEVICE }}/builds)
-            image_url=$(echo $lineageos_api_response | jq '.[0].files[1].url')
+            image_url=$(echo $lineageos_api_response | jq -r '.[0].files[1].url')
+            echo "SOURCE_BOOT_IMAGE=$image_url" >> $GITHUB_ENV
+            echo "SOURCE_BOOT_IMAGE:${{ env.SOURCE_BOOT_IMAGE }}"
         fi
         
         wget -O boot-source.img $image_url
