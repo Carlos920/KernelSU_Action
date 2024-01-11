@@ -1,4 +1,4 @@
-name: Build Kernel
+name: Build Kernel With Docker
 on:
   watch:
     types: [started]
