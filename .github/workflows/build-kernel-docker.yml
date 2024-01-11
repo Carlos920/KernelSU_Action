@@ -206,7 +206,7 @@ jobs:
         git config --local user.name "github-actions[bot]"
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
 
-        git -c fetch https://github.com/lateautumn233/android_kernel_docker main
+        git fetch https://github.com/lateautumn233/android_kernel_docker main
         git merge -s ours --no-commit --allow-unrelated-histories --squash FETCH_HEAD
         git read-tree --prefix=docker -u FETCH_HEAD
         echo "source \"docker/Kconfig\"" >> arch/arm64/Kconfig
