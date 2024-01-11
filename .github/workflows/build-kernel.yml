@@ -209,7 +209,7 @@ jobs:
         done
         echo "UPLOADNAME=${{ env.UPLOADNAME }}-LXC" >> $GITHUB_ENV
 
-        echo "KBUILD_CFLAGS += -w" >> Makefile
+        # echo "KBUILD_CFLAGS += -w" >> Makefile
 
     - name: Setup Configuration for Kernel
       run: |
