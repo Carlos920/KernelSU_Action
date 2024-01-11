@@ -213,6 +213,8 @@ jobs:
         git commit -a -m "Imported docker/ from https://github.com/lateautumn233/android_kernel_docker"
         echo "UPLOADNAME=${{ env.UPLOADNAME }}-Docker" >> $GITHUB_ENV
 
+        echo "KBUILD_CFLAGS += -Wno-parentheses-equality" >> Makefile
+
     - name: Setup Configuration for Kernel
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
