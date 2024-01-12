@@ -211,6 +211,24 @@ jobs:
 
         # echo "KBUILD_CFLAGS += -w" >> Makefile
 
+        sed -i '/url =/d' ./.git/config
+        git config --local user.name "github-actions[bot]"
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+
+        git fetch https://github.com/lateautumn233/android_kernel_docker main
+        git merge -s ours --no-commit --allow-unrelated-histories --squash FETCH_HEAD
+        git read-tree --prefix=docker -u FETCH_HEAD
+        echo "source \"docker/Kconfig\"" >> arch/arm64/Kconfig
+        git commit -a -m "Imported docker/ from https://github.com/lateautumn233/android_kernel_docker"
+        echo "UPLOADNAME=${{ env.UPLOADNAME }}-Docker" >> $GITHUB_ENV
+
+        if [ -f security/apparmor/crypto.c ]; then
+            patch -p1 < $GITHUB_WORKSPACE/lxc_patch/${{ env.DEVICE }}_crypto.patch
+            echo "🎖️ Apply ${{ env.DEVICE }}_crypto.patch"
+          fi
+
+        echo "KBUILD_CFLAGS += -Wno-parentheses-equality" >> Makefile
+
     - name: Setup Configuration for Kernel
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
