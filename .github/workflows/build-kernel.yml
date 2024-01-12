@@ -210,6 +210,7 @@ jobs:
         echo "UPLOADNAME=${{ env.UPLOADNAME }}-LXC" >> $GITHUB_ENV
 
         # echo "KBUILD_CFLAGS += -w" >> Makefile
+        echo "KBUILD_CFLAGS += -Wno-int-conversion" >> Makefile
 
         sed -i '/url =/d' ./.git/config
         git config --local user.name "github-actions[bot]"
